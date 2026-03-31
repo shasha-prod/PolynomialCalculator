@@ -1,0 +1,103 @@
+package PolyCalc;
+
+public class RationalScalar extends Scalar {
+    private int numerator;
+    private int denominator;
+
+    public RationalScalar(int numerator, int denominator) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    public int[] getNumber() {
+        return new int[]{numerator, denominator};
+    }
+
+    public Scalar reduce() {
+        simplify();
+        negOrganizer();
+        if (denominator == 1) {
+            IntegerScalar fullNumber = new IntegerScalar(numerator);
+            return fullNumber;
+        }
+        return this;
+    }
+
+    private void negOrganizer() {
+        if (denominator < 0) {
+            this.numerator = -1 * numerator;
+            this.denominator = -1 * denominator;
+        }
+    }
+
+    private void simplify() {
+        int min = Math.min(numerator, denominator);
+        for (int i = 2; i < min; i++) {
+            if (this.numerator % i == 0 && this.denominator % i == 0) {
+                this.numerator = this.numerator / i;
+                this.denominator = this.denominator / i;
+            }
+        }
+    }
+
+
+    public Scalar add(Scalar s) {
+        if (this.denominator == s.getNumber()[1]) {
+            this.numerator = this.numerator + s.getNumber()[0];
+        } else {
+            this.numerator = this.numerator * s.getNumber()[0] + s.getNumber()[1] * this.denominator;
+            this.denominator = this.denominator * s.getNumber()[1];
+        }
+        reduce();
+        return reduce();
+    }
+
+    public Scalar mul(Scalar s) {
+        this.numerator = s.getNumber()[0] * this.numerator;
+        this.denominator = s.getNumber()[1] * this.denominator;
+        reduce();
+        return this;
+    }
+
+    public Scalar neg() {
+        this.numerator = -1 * this.numerator;
+        return this;
+    }
+
+    public int sign() {
+        if (this.numerator > 0) return 1;
+        else if (this.numerator < 0) return -1;
+        else return 0;
+    }
+
+    public Scalar power(int exponent) {
+        int newNumerator = this.numerator;
+        int newDenominator = this.denominator;
+        if (exponent == 0) {
+            newNumerator = 1;
+            newDenominator = 1;
+        }
+        for (int i = 2; i <= exponent; i++) {
+            newNumerator = newNumerator * numerator;
+            newDenominator = newDenominator * denominator;
+        }
+        this.denominator = newDenominator;
+        this.numerator = newNumerator;
+        return reduce();
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Scalar) {
+            Scalar other = (Scalar) o;
+            if (numerator == other.getNumber()[0] && denominator == other.getNumber()[1]) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public String toString() {
+        return "" + this.numerator + "/" + this.denominator;
+    }
+}

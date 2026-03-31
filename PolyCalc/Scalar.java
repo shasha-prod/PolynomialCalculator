@@ -1,23 +1,27 @@
+package PolyCalc;
+
 abstract class Scalar {
+    //Get Number
+    abstract int[] getNumber();
     //Returns the addition between two scalars
-    abstract Scalar add(Scalar s)
+    abstract Scalar add(Scalar s);
 
     //Returns the multiplication between two scalars
-    abstract Scalar mul(Scalar s)
+    abstract Scalar mul(Scalar s);
 
     //Returns the negative of a scalar
-    abstract Scalar neg()
+    abstract Scalar neg();
 
     //Returns the power to the exponent of a scalar if exponent>0
-    abstract Scalar power(int exponent)
+    abstract Scalar power(int exponent);
 
     //Returns the sign of the scalar: -1 if negative, 1 if positive, else 0.
-    abstract int sign()
+    abstract int sign();
 
     //override
-    abstract boolean equals(Object o)
+    public abstract boolean equals(Object o);
 
     //override
-    abstract String toString()
+    public abstract String toString();
 
 }
