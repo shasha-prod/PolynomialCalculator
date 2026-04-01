@@ -1,60 +1,65 @@
 package PolyCalc;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 class IntegerScalarTest {
     Scalar positiveNumber;
     Scalar negativeNumber;
 
-    @org.junit.jupiter.api.BeforeEach
+    @BeforeEach
     void setUp() {
         positiveNumber = new IntegerScalar(300);
         negativeNumber = new IntegerScalar(-5);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void TestAdd() {
-        assertEquals(new IntegerScalar(295),positiveNumber.add(negativeNumber));
+        assertEquals(new IntegerScalar(295), positiveNumber.add(negativeNumber));
     }
-    @org.junit.jupiter.api.Test
+
+    @Test
     void TestNegAdd() {
-        assertEquals(new IntegerScalar(-10),negativeNumber.add(negativeNumber));
+        assertEquals(new IntegerScalar(-10), negativeNumber.add(negativeNumber));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void mul() {
-        assertEquals(new IntegerScalar(-1500),positiveNumber.mul(negativeNumber));
+        assertEquals(new IntegerScalar(-1500), positiveNumber.mul(negativeNumber));
     }
 
+    @Test
     void TwoNegMul() {
-        assertEquals(new IntegerScalar(1500),new IntegerScalar(-300).mul(negativeNumber));
+        assertEquals(new IntegerScalar(1500), new IntegerScalar(-300).mul(negativeNumber));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void CheckPositiveNumberSign() {
-        assertEquals(1,positiveNumber.sign());
+        assertEquals(1, positiveNumber.sign());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void CheckNegativeNumberSign() {
-        assertEquals(-1,negativeNumber.sign());
+        assertEquals(-1, negativeNumber.sign());
     }
-    @org.junit.jupiter.api.Test
+
+    @Test
     void CheckZeroNumberSign() {
-        assertEquals(0,new IntegerScalar(0).sign());
+        assertEquals(0, new IntegerScalar(0).sign());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void power() {
-        assertEquals(new IntegerScalar(4),new IntegerScalar(2).power(2));
+        assertEquals(new IntegerScalar(4), new IntegerScalar(2).power(2));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void Morepower() {
-        assertEquals(new IntegerScalar(32),new IntegerScalar(2).power(5));
+        assertEquals(new IntegerScalar(32), new IntegerScalar(2).power(5));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testEquals() {
         assertTrue(new IntegerScalar(32).equals(new IntegerScalar(32)));
         assertTrue(positiveNumber.equals(new IntegerScalar(300)));
@@ -62,9 +67,14 @@ class IntegerScalarTest {
 
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
+    void testRationalToIntegerEquals() {
+        assertTrue(new RationalScalar(32, 1).equals(new IntegerScalar(32)));
+    }
+
+    @Test
     void testtoString() {
-        assertEquals("32",new IntegerScalar(32).toString());
+        assertEquals("32", new IntegerScalar(32).toString());
     }
 
 }
