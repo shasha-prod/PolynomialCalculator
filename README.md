@@ -3,7 +3,7 @@ OOP Assignment 1 - Polynomial Calculator:
 This project implements a polynomial calculation system using object-oriented design principles. The system is structured around three main mathematical abstractions:
 
  - Scalar
- - Monomial
+ - PolyCalc.Monomial
  - Polynomial
 
 The UML diagram illustrates the relationships between these components and their concrete implementations.
