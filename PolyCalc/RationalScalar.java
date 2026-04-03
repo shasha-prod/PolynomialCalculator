@@ -7,6 +7,7 @@ public class RationalScalar extends Scalar {
     public RationalScalar(int numerator, int denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
+        reduce();
     }
 
     public int[] getNumber() {
@@ -14,8 +15,8 @@ public class RationalScalar extends Scalar {
     }
 
     public Scalar reduce() {
-        simplify();
         negOrganizer();
+        simplify();
         if (denominator == 1) {
             IntegerScalar fullNumber = new IntegerScalar(numerator);
             return fullNumber;
@@ -31,13 +32,24 @@ public class RationalScalar extends Scalar {
     }
 
     private void simplify() {
-        int min = Math.min(numerator, denominator);
-        for (int i = 2; i < min; i++) {
-            if (this.numerator % i == 0 && this.denominator % i == 0) {
-                this.numerator = this.numerator / i;
-                this.denominator = this.denominator / i;
+        int min = Math.min(Math.abs(numerator), Math.abs(denominator));
+        int index = 2;
+        while (index <= min) {
+            if (this.numerator % index == 0 && this.denominator % index == 0) {
+                this.numerator = this.numerator / index;
+                this.denominator = this.denominator / index;
+            }
+            else{
+                index++;
             }
         }
+    }
+
+    public Scalar checkZero(){
+        if(numerator == 0){
+            this.denominator = 0;
+        }
+        return this;
     }
 
 
@@ -45,17 +57,19 @@ public class RationalScalar extends Scalar {
         if (this.denominator == s.getNumber()[1]) {
             this.numerator = this.numerator + s.getNumber()[0];
         } else {
-            this.numerator = this.numerator * s.getNumber()[0] + s.getNumber()[1] * this.denominator;
+            this.numerator = this.numerator * s.getNumber()[1] + s.getNumber()[0] * this.denominator;
             this.denominator = this.denominator * s.getNumber()[1];
         }
         reduce();
-        return reduce();
+        checkZero();
+        return this;
     }
 
     public Scalar mul(Scalar s) {
         this.numerator = s.getNumber()[0] * this.numerator;
         this.denominator = s.getNumber()[1] * this.denominator;
         reduce();
+        checkZero();
         return this;
     }
 
@@ -98,6 +112,7 @@ public class RationalScalar extends Scalar {
     }
 
     public String toString() {
+        if(denominator == 1 || denominator == 0){return "" + this.numerator;}
         return "" + this.numerator + "/" + this.denominator;
     }
 }
