@@ -40,6 +40,15 @@ class IntegerScalarTest {
         //checking zeros sign
         assertEquals(0, new IntegerScalar(0).sign());
     }
+    @Test
+    void testNeg() {
+        // testing the negative of 300 =>-300
+        assertEquals(new IntegerScalar(-300), positiveNumber.neg());
+        // testing the negative of -5 =>-5
+        assertEquals(new IntegerScalar(5), negativeNumber.neg());
+        //checking zeros sign
+        assertEquals(0, new IntegerScalar(0).neg());
+    }
 
 
     @Test

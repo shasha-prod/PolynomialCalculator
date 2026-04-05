@@ -38,44 +38,41 @@ public class RationalScalar extends Scalar {
             if (this.numerator % index == 0 && this.denominator % index == 0) {
                 this.numerator = this.numerator / index;
                 this.denominator = this.denominator / index;
-            }
-            else{
+            } else {
                 index++;
             }
         }
     }
 
-    public Scalar checkZero(){
-        if(numerator == 0){
-            this.denominator = 0;
+    public Scalar checkZero() {
+        if (numerator == 0) {
+            this.denominator = 1;
         }
         return this;
     }
 
 
     public Scalar add(Scalar s) {
+        RationalScalar temp;
         if (this.denominator == s.getNumber()[1]) {
-            this.numerator = this.numerator + s.getNumber()[0];
+            temp = new RationalScalar(this.numerator + s.getNumber()[0], this.denominator);
         } else {
-            this.numerator = this.numerator * s.getNumber()[1] + s.getNumber()[0] * this.denominator;
-            this.denominator = this.denominator * s.getNumber()[1];
+            temp = new RationalScalar(this.numerator * s.getNumber()[1] + s.getNumber()[0] * this.denominator, this.denominator * s.getNumber()[1]);
         }
-        reduce();
-        checkZero();
-        return this;
+        temp.reduce();
+        temp.checkZero();
+        return temp;
     }
 
     public Scalar mul(Scalar s) {
-        this.numerator = s.getNumber()[0] * this.numerator;
-        this.denominator = s.getNumber()[1] * this.denominator;
-        reduce();
-        checkZero();
-        return this;
+        RationalScalar temp = new RationalScalar(s.getNumber()[0] * this.numerator, s.getNumber()[1] * this.denominator);
+        temp.reduce();
+        temp.checkZero();
+        return temp;
     }
 
     public Scalar neg() {
-        this.numerator = -1 * this.numerator;
-        return this;
+        return new RationalScalar(this.numerator * -1,this.denominator);
     }
 
     public int sign() {
@@ -95,9 +92,7 @@ public class RationalScalar extends Scalar {
             newNumerator = newNumerator * numerator;
             newDenominator = newDenominator * denominator;
         }
-        this.denominator = newDenominator;
-        this.numerator = newNumerator;
-        return reduce();
+        return new RationalScalar(newNumerator,newDenominator).reduce();
     }
 
     public boolean equals(Object o) {
@@ -112,7 +107,9 @@ public class RationalScalar extends Scalar {
     }
 
     public String toString() {
-        if(denominator == 1 || denominator == 0){return "" + this.numerator;}
+        if (denominator == 1 || denominator == 0) {
+            return "" + this.numerator;
+        }
         return "" + this.numerator + "/" + this.denominator;
     }
 }

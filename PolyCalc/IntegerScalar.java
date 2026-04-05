@@ -12,19 +12,15 @@ public class IntegerScalar extends Scalar {
     }
 
     public Scalar add(Scalar s) {
-        System.out.println(this.number);
-        this.number = number + s.getNumber()[0];
-        return this;
+        return new IntegerScalar(this.number + s.getNumber()[0]);
     }
 
     public Scalar mul(Scalar s) {
-        this.number = number * s.getNumber()[0];
-        return this;
+        return new IntegerScalar(this.number * s.getNumber()[0]);
     }
 
     public Scalar neg() {
-        this.number = this.number * -1;
-        return this;
+        return new IntegerScalar(this.number * -1);
     }
 
     public Scalar power(int exponent) {
@@ -35,8 +31,7 @@ public class IntegerScalar extends Scalar {
         for (int i = 2; i <= exponent; i++) {
             newNumber = newNumber * number;
         }
-        this.number = newNumber;
-        return this;
+        return new IntegerScalar(newNumber);
     }
 
     public int sign() {
@@ -50,8 +45,8 @@ public class IntegerScalar extends Scalar {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Scalar){
-            Scalar other = (Scalar)o;
+        if (o instanceof Scalar) {
+            Scalar other = (Scalar) o;
             if (this.getNumber()[0] == other.getNumber()[0] && this.getNumber()[1] == other.getNumber()[1]) {
                 return true;
             }

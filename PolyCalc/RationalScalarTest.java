@@ -9,9 +9,6 @@ class RationalScalarTest {
 
     @Test
     void testGetRedusedNumber() {
-        Scalar unreducedfraction = new RationalScalar(4, 8);
-        assertEquals(1, unreducedfraction.getNumber()[0]);
-        assertEquals(2, unreducedfraction.getNumber()[1]);
     }
 
     @Test
@@ -21,76 +18,61 @@ class RationalScalarTest {
     }
 
     @Test
-    void reduce() {
+    void testReduce() {
+        //testing a number that needs a lot of reduction steps
         RationalScalar superUnredused = new RationalScalar(2048, -64);
         assertEquals(new RationalScalar(-32, 1), superUnredused.reduce());
+        //testing an unreduced fraction
+        RationalScalar unreducedfraction = new RationalScalar(4, 8);
+        assertEquals(new RationalScalar(1, 2), unreducedfraction.reduce());
     }
 
     @Test
     void addFraction() {
+        // adding 100/6+ 0 = 50/3
         assertEquals(new RationalScalar(50, 3), new RationalScalar(100, 6).add(new RationalScalar(0, 1)));
-    }
-
-    @Test
-    void addBiggerFraction() {
+        //adding 33/50+22/100 = 22/25
         assertEquals(new RationalScalar(22, 25), new RationalScalar(33, 50).add(new RationalScalar(22, 100)));
-    }
-
-    @Test
-    void mul() {
-        assertEquals(new RationalScalar(0, 0), new RationalScalar(100, 6).mul(new RationalScalar(0, 1)));
+        //adding -33/50+22/100 = -22/25
+        assertEquals(new RationalScalar(-22, 25), new RationalScalar(-33, 50).add(new RationalScalar(22, 100)));
 
     }
 
     @Test
-    void testPostoNegNum() {
+    void testMul() {
+        assertEquals(new RationalScalar(0, 1), new RationalScalar(100, 6).mul(new RationalScalar(0, 1)));
+    }
+
+    @Test
+    void testNeg() {
         assertEquals(new RationalScalar(-50, 3), new RationalScalar(100, 6).neg());
-    }
 
-    @Test
-    void testNegToPosNum() {
         assertEquals(new RationalScalar(3, 2), new RationalScalar(-3, 2).neg());
+
+        assertEquals(new RationalScalar(-5, 1), new RationalScalar(-10, -2));
+        assertEquals(new RationalScalar(3, 1), new RationalScalar(9,-3).neg());
+        //checking zeros sign
+        assertEquals(0, new IntegerScalar(0).neg());
     }
 
     @Test
-    void testTrickPostoNegNum() {
-        Scalar tricky = new RationalScalar(-10, -2);
-        assertEquals(new RationalScalar(-5, 1), tricky.neg());
-    }
-
-    @Test
-    void testTrickNegtoPosNum() {
-        Scalar switched = new RationalScalar(9, -3);
-        assertEquals(new RationalScalar(3, 1), switched.neg());
-    }
-
-    @Test
-    void PosSign() {
+    void testSigns() {
+        //testing positive sign
         assertEquals(1, new RationalScalar(3, 1).sign());
-    }
-
-    @Test
-    void NegSign() {
+        //testing negative sign
         assertEquals(-1, new RationalScalar(-21, 9).sign());
-    }
-
-    @Test
-    void PosTrickSign() {
+        //testing 0 sign
+        assertEquals(0, new RationalScalar(0, 1).sign());
+        //testing a Rational number with a negative in the numerator and denominator (so secret positive)
         assertEquals(1, new RationalScalar(-3, -1).sign());
-    }
-
-    @Test
-    void NegTrickSign() {
+        //testing a Rational number with a negative in the numerator and denominator (so secret positive)
         assertEquals(-1, new RationalScalar(21, -9).sign());
     }
 
     @Test
-    void power() {
+    void testPower() {
         assertEquals(new RationalScalar(4, 81), new RationalScalar(2, -9).power(2));
-    }
 
-    @Test
-    void Trickpower() {
         assertEquals(new RationalScalar(-1, 1), new RationalScalar(100, -100).power(15));
     }
 
