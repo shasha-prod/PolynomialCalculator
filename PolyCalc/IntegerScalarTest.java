@@ -2,6 +2,7 @@ package PolyCalc;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class IntegerScalarTest {
@@ -16,64 +17,59 @@ class IntegerScalarTest {
 
     @Test
     void TestAdd() {
+        //adding 300+-5 = 295
         assertEquals(new IntegerScalar(295), positiveNumber.add(negativeNumber));
-    }
-
-    @Test
-    void TestNegAdd() {
+        //adding negative numbers -5+-5 = -10
         assertEquals(new IntegerScalar(-10), negativeNumber.add(negativeNumber));
     }
 
     @Test
-    void mul() {
+    void testMul() {
+        // multiplying 300*-5 = -1500
         assertEquals(new IntegerScalar(-1500), positiveNumber.mul(negativeNumber));
-    }
-
-    @Test
-    void TwoNegMul() {
+        //multiplying -3000*-5 = 1500
         assertEquals(new IntegerScalar(1500), new IntegerScalar(-300).mul(negativeNumber));
     }
 
     @Test
-    void CheckPositiveNumberSign() {
+    void CheckNumberSign() {
+        // checking a positiveNumbers sign
         assertEquals(1, positiveNumber.sign());
-    }
-
-    @Test
-    void CheckNegativeNumberSign() {
+        // checking a negativeNumbers sign
         assertEquals(-1, negativeNumber.sign());
-    }
-
-    @Test
-    void CheckZeroNumberSign() {
+        //checking zeros sign
         assertEquals(0, new IntegerScalar(0).sign());
     }
 
-    @Test
-    void power() {
-        assertEquals(new IntegerScalar(4), new IntegerScalar(2).power(2));
-    }
 
     @Test
-    void Morepower() {
+    void testPower() {
+        //testing power 2^2 = 4
+        assertEquals(new IntegerScalar(4), new IntegerScalar(2).power(2));
+        //testing bigger number 2^5 = 32
         assertEquals(new IntegerScalar(32), new IntegerScalar(2).power(5));
+        //testing negative number -9^1 = -9
+        assertEquals(new IntegerScalar(-9), new IntegerScalar(-9).power(1));
+        //testing power of 0 = 45^0 = 1
+        assertEquals(new IntegerScalar(1), new IntegerScalar(45).power(0));
+
     }
 
     @Test
     void testEquals() {
+        //testing simple equality
         assertTrue(new IntegerScalar(32).equals(new IntegerScalar(32)));
         assertTrue(positiveNumber.equals(new IntegerScalar(300)));
         assertTrue(negativeNumber.equals(new IntegerScalar(-5)));
 
-    }
-
-    @Test
-    void testRationalToIntegerEquals() {
+        //testing equality between equal numbers but different classes
         assertTrue(new RationalScalar(32, 1).equals(new IntegerScalar(32)));
+
     }
 
     @Test
-    void testtoString() {
+    void testToString() {
+        //Testing to String
         assertEquals("32", new IntegerScalar(32).toString());
     }
 
