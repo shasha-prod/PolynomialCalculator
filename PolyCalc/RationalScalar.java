@@ -15,6 +15,7 @@ public class RationalScalar extends Scalar {
     }
 
     public Scalar reduce() {
+        checkZero();
         negOrganizer();
         simplify();
         if (denominator == 1) {
@@ -59,15 +60,11 @@ public class RationalScalar extends Scalar {
         } else {
             temp = new RationalScalar(this.numerator * s.getNumber()[1] + s.getNumber()[0] * this.denominator, this.denominator * s.getNumber()[1]);
         }
-        temp.reduce();
-        temp.checkZero();
         return temp;
     }
 
     public Scalar mul(Scalar s) {
         RationalScalar temp = new RationalScalar(s.getNumber()[0] * this.numerator, s.getNumber()[1] * this.denominator);
-        temp.reduce();
-        temp.checkZero();
         return temp;
     }
 

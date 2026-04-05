@@ -12,11 +12,11 @@ public class IntegerScalar extends Scalar {
     }
 
     public Scalar add(Scalar s) {
-        return new IntegerScalar(this.number + s.getNumber()[0]);
+        return new RationalScalar(this.number, 1).add(s);
     }
 
     public Scalar mul(Scalar s) {
-        return new IntegerScalar(this.number * s.getNumber()[0]);
+        return new RationalScalar(this.number, 1).mul(s);
     }
 
     public Scalar neg() {
