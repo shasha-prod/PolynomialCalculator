@@ -2,58 +2,151 @@ package PolyCalc;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.Collection;
-import java.util.Iterator;
 
 class PolynomialTest {
 
     @Test
-    void testBuildStandard() {
-        // Test parsing "1 2 3" -> 1 + 2x + 3x^2
+    void polynomial_build_allInteger() {
+        // "1 2 3" -> 1 + 2x + 3x^2
         Polynomial p = Polynomial.build("1 2 3");
-        Collection<Monomial> monomials = p.getMonomials();
-
-        // It should have exactly 3 terms
-        assertEquals(3, monomials.size());
-
-        // We use an Iterator to look at the items inside the Collection one by one
-        Iterator<Monomial> it = monomials.iterator();
-
-        // Term 1: 1x^0
-        Monomial m1 = it.next();
-        assertEquals(0, m1.getExponent());
-        assertEquals(new IntegerScalar(1), m1.getCoefficient());
-
-        // Term 2: 2x^1
-        Monomial m2 = it.next();
-        assertEquals(1, m2.getExponent());
-        assertEquals(new IntegerScalar(2), m2.getCoefficient());
-
-        // Term 3: 3x^2
-        Monomial m3 = it.next();
-        assertEquals(2, m3.getExponent());
-        assertEquals(new IntegerScalar(3), m3.getCoefficient());
+        Polynomial expected = new Polynomial();
+        expected.getMonomials().add(new Monomial(0, new IntegerScalar(1)));
+        expected.getMonomials().add(new Monomial(1, new IntegerScalar(2)));
+        expected.getMonomials().add(new Monomial(2, new IntegerScalar(3)));
+        assertEquals(expected, p);
     }
 
     @Test
-    void testBuildWithFractionsAndZeroes() {
-        // Test parsing "0 1/2 -5/3" -> 1/2x - 5/3x^2
-        Polynomial p = Polynomial.build("0 1/2 -5/3");
-        Collection<Monomial> monomials = p.getMonomials();
+    void polynomial_build_leadingZero() {
+        // "0 1 2 3" -> x + 2x^2 + 3x^3 (zero-coeff monomial at index 0)
+        Polynomial p = Polynomial.build("0 1 2 3");
+        // Evaluate at x=1: 0+1+2+3=6
+        assertEquals(new IntegerScalar(6), p.evaluate(new IntegerScalar(1)));
+    }
 
-        // It should only have 2 terms! The 0 should have been skipped.
-        assertEquals(2, monomials.size());
+    @Test
+    void polynomial_build_withRationals() {
+        // "0 1/2 3 -5/3" -> 0 + (1/2)x + 3x^2 + (-5/3)x^3
+        Polynomial p = Polynomial.build("0 1/2 3 -5/3");
+        assertNotNull(p);
+        // Spot-check: evaluate at x=0 -> 0
+        assertEquals(new IntegerScalar(0), p.evaluate(new IntegerScalar(0)));
+    }
 
-        Iterator<Monomial> it = monomials.iterator();
+    @Test
+    void polynomial_add_basic() {
+        // (1 + 2x) + (3 + 4x) = 4 + 6x
+        Polynomial a = Polynomial.build("1 2");
+        Polynomial b = Polynomial.build("3 4");
+        Polynomial result = a.add(b);
+        assertEquals(Polynomial.build("4 6"), result);
+    }
 
-        // First term should be the 1x exponent (1/2x)
-        Monomial m1 = it.next();
-        assertEquals(1, m1.getExponent());
-        assertEquals(new RationalScalar(1, 2), m1.getCoefficient());
+    @Test
+    void polynomial_add_differentDegrees() {
+        // (1 + 2x) + (3x^2) = 1 + 2x + 3x^2
+        Polynomial a = Polynomial.build("1 2");
+        Polynomial b = Polynomial.build("0 0 3");
+        Polynomial result = a.add(b);
+        assertEquals(Polynomial.build("1 2 3"), result);
+    }
 
-        // Second term should be the 2x exponent (-5/3x^2)
-        Monomial m2 = it.next();
-        assertEquals(2, m2.getExponent());
-        assertEquals(new RationalScalar(-5, 3), m2.getCoefficient());
+    @Test
+    void polynomial_add_cancellingTerms() {
+        // (5 + 3x) + (-5 + -3x) = 0
+        Polynomial a = Polynomial.build("5 3");
+        Polynomial b = Polynomial.build("-5 -3");
+        Polynomial result = a.add(b);
+        // All coefficients are zero
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    void polynomial_mul_basic() {
+        // (1 + x) * (1 + x) = 1 + 2x + x^2
+        Polynomial a = Polynomial.build("1 1");
+        Polynomial b = Polynomial.build("1 1");
+        Polynomial result = a.mul(b);
+        assertEquals(Polynomial.build("1 2 1"), result);
+    }
+
+    @Test
+    void polynomial_mul_byZero() {
+        Polynomial a = Polynomial.build("1 2 3");
+        Polynomial b = Polynomial.build("0");
+        Polynomial result = a.mul(b);
+        assertEquals("0", result.toString());
+    }
+
+    @Test
+    void polynomial_evaluate_atZero() {
+        // 5 + 3x + 2x^2 at x=0 -> 5
+        Polynomial p = Polynomial.build("5 3 2");
+        assertEquals(new IntegerScalar(5), p.evaluate(new IntegerScalar(0)));
+    }
+
+    @Test
+    void polynomial_evaluate_atOne() {
+        // 1 + 2 + 3 = 6
+        Polynomial p = Polynomial.build("1 2 3");
+        assertEquals(new IntegerScalar(6), p.evaluate(new IntegerScalar(1)));
+    }
+
+    @Test
+    void polynomial_evaluate_rationalInput() {
+        // 2x at x=1/2 -> 1
+        Polynomial p = Polynomial.build("0 2");
+        assertEquals(new IntegerScalar(1), p.evaluate(new RationalScalar(1, 2)));
+    }
+
+    @Test
+    void polynomial_derivative_basic() {
+        // d/dx(1 + 2x + 3x^2) = 2 + 6x
+        Polynomial p = Polynomial.build("1 2 3");
+        Polynomial dp = p.derivative();
+        // Evaluate at x=1: 2 + 6 = 8
+        assertEquals(new IntegerScalar(8), dp.evaluate(new IntegerScalar(1)));
+    }
+
+    @Test
+    void polynomial_derivative_constant() {
+        // d/dx(5) = 0
+        Polynomial p = Polynomial.build("5");
+        Polynomial dp = p.derivative();
+        assertEquals("0", dp.toString());
+    }
+
+    @Test
+    void polynomial_equals_samePolynomials() {
+        Polynomial a = Polynomial.build("1 2 3");
+        Polynomial b = Polynomial.build("1 2 3");
+        assertEquals(a, b);
+    }
+
+    @Test
+    void polynomial_equals_differentPolynomials() {
+        Polynomial a = Polynomial.build("1 2 3");
+        Polynomial b = Polynomial.build("1 2 4");
+        assertNotEquals(a, b);
+    }
+
+    @Test
+    void polynomial_toString_basic() {
+        Polynomial p = Polynomial.build("1 2 3");
+        assertEquals("1 + 2x + 3x^2", p.toString());
+    }
+
+    @Test
+    void polynomial_toString_negativeMiddleTerm() {
+        // "1 -2 3" -> "1 -2x + 3x^2"
+        Polynomial p = Polynomial.build("1 -2 3");
+        assertEquals("1 -2x + 3x^2", p.toString());
+    }
+
+    @Test
+    void polynomial_toString_empty() {
+        Polynomial p = new Polynomial();
+        assertEquals("0", p.toString());
     }
 }
+

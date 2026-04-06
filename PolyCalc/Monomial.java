@@ -62,13 +62,11 @@ public class Monomial {
 
         String result = "";
 
-        if (this.coefficient.equals(new IntegerScalar(1))) {
-        } else if (this.coefficient.equals(new IntegerScalar(-1))) {
+        if (this.coefficient.equals(new IntegerScalar(-1))) {
             result += "-";
-        } else {
-            result += this.coefficient.toString();
+        } else if (!this.coefficient.equals(new IntegerScalar(1))) {
+            result += this.coefficient.toString(); // Only add the number if it's NOT 1
         }
-
 
         if (this.exponent == 1) {
             result += "x";

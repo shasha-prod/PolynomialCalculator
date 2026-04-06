@@ -12,31 +12,131 @@ public class Polynomial {
 
     public static Polynomial build(String input) {
         Polynomial p = new Polynomial();
-
-        String[] parts = input.split(" ");
-
-        for (int i = 0; i < parts.length; i++) {
-            String term = parts[i];
-            Scalar coefficient;
-            if (term.contains("/")) {
-                String[] fraction = term.split("/");
-                int num = Integer.parseInt(fraction[0]);
-                int den = Integer.parseInt(fraction[1]);
-                coefficient = new RationalScalar(num, den);
+        String[] tokens = input.split(" ");
+        for (int i = 0; i < tokens.length; i++) {
+            Scalar coeff;
+            if (tokens[i].contains("/")) {
+                String[] parts = tokens[i].split("/");
+                coeff = new RationalScalar(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
             } else {
-                int num = Integer.parseInt(term);
-                coefficient = new IntegerScalar(num);
+                coeff = new IntegerScalar(Integer.parseInt(tokens[i]));
             }
-            if (coefficient.sign() != 0) {
-                Monomial m = new Monomial(i, coefficient);
-                p.monomials.add(m);
-            }
+            p.getMonomials().add(new Monomial(i, coeff));
         }
         return p;
     }
 
-    // Helper method so we can test what's inside
-    public Collection<Monomial> getMonomials() {
+    public Polynomial add(Polynomial p) {
+        Polynomial result = new Polynomial();
+
+        for (Monomial m : this.monomials) {
+            result.monomials.add(m);
+        }
+
+        for (Monomial n : p.getMonomials()) {
+            boolean foundMatch = false;
+            for (Monomial resMonomial : result.monomials) {
+                if (resMonomial.getExponent() == n.getExponent()) {
+                    result.monomials.remove(resMonomial);
+                    Monomial newMonomial = resMonomial.add(n);
+                    result.monomials.add(newMonomial);
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if (foundMatch == false) {
+                result.monomials.add(n);
+            }
+        }
+        return result;
+    }
+
+    public Polynomial mul(Polynomial p) {
+        Polynomial result = new Polynomial();
+        for (Monomial m : this.monomials) {
+            for (Monomial n : p.getMonomials()) {
+                Monomial product = m.mul(n);
+                Polynomial tinyPoly = new Polynomial();
+                tinyPoly.getMonomials().add(product);
+                result = result.add(tinyPoly);
+            }
+        }
+        return result;
+    }
+
+    public Scalar evaluate(Scalar s){
+        Scalar total = new IntegerScalar(0);
+        for (Monomial m : this.monomials){
+            total = total.add(m.evaluate(s));
+        }
+        return total;
+    }
+
+    public Polynomial derivative(){
+        Polynomial result = new Polynomial();
+        for (Monomial m : this.monomials){
+            result.monomials.add(m.derivative());
+        }
+        return result;
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Polynomial) {
+            Polynomial other = (Polynomial) o;
+            if (this.monomials.size() != other.getMonomials().size()) {
+                return false;
+            }
+            for (Monomial m : this.monomials) {
+                boolean found = false;
+
+                for (Monomial n : other.getMonomials()) {
+                    if (m.equals(n)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found == false) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public String toString() {
+        if (this.monomials.isEmpty()) {
+            return "0";
+        }
+
+        String result = "";
+        boolean isFirstTerm = true;
+
+        for (Monomial m : this.monomials) {
+            if (m.sign() == 0) {
+                continue;
+            }
+
+            if (isFirstTerm == true) {
+                result = result + m.toString();
+                isFirstTerm = false;
+            } else {
+                if (m.sign() > 0) {
+                    result = result + " + " + m.toString();
+                } else {
+                    result = result + " " + m.toString();
+                }
+            }
+        }
+
+        if (result.equals("")) {
+            return "0";
+        }
+
+        return result;
+    }
+
+    public Collection<Monomial> getMonomials(){
         return this.monomials;
     }
 }
