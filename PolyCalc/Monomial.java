@@ -30,7 +30,6 @@ public class Monomial {
 
     public Monomial derivative() {
         if (this.exponent == 0) {
-            // Returns 0x^0
             return new Monomial(0, new IntegerScalar(0));
         }
         Scalar exponentAsScalar = new IntegerScalar(this.exponent);
