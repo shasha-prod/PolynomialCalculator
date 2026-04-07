@@ -7,8 +7,11 @@ public class IntegerScalar extends Scalar {
         this.number = number;
     }
 
-    public int[] getNumber() {
-        return new int[]{number, 1};
+    public int getNumerator() {
+        return number;
+    }
+    public int getDenominator() {
+        return 1;
     }
 
     public Scalar add(Scalar s) {
@@ -45,12 +48,16 @@ public class IntegerScalar extends Scalar {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Scalar) {
-            Scalar other = (Scalar) o;
-            if (this.getNumber()[0] == other.getNumber()[0] && this.getNumber()[1] == other.getNumber()[1]) {
+        if (o instanceof IntegerScalar) {
+            Scalar other = (IntegerScalar) o;
+            if (this.number == other.getNumerator()) {
                 return true;
             }
             return false;
+        }
+        if (o instanceof RationalScalar) {
+            RationalScalar other = (RationalScalar) o;
+            other.equals(new RationalScalar(this.number,1));
         }
         return false;
     }

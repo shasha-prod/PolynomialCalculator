@@ -9,9 +9,11 @@ public class RationalScalar extends Scalar {
         this.denominator = denominator;
         reduce();
     }
-
-    public int[] getNumber() {
-        return new int[]{numerator, denominator};
+    public int getNumerator() {
+        return numerator;
+    }
+    public int getDenominator() {
+        return denominator;
     }
 
     public Scalar reduce() {
@@ -55,17 +57,17 @@ public class RationalScalar extends Scalar {
 
     public Scalar add(Scalar s) {
         RationalScalar temp;
-        if (this.denominator == s.getNumber()[1]) {
-            temp = new RationalScalar(this.numerator + s.getNumber()[0], this.denominator);
+        if (this.denominator == s.getDenominator()) {
+            temp = new RationalScalar(this.numerator + s.getNumerator(), this.denominator);
         } else {
-            temp = new RationalScalar(this.numerator * s.getNumber()[1] + s.getNumber()[0] * this.denominator, this.denominator * s.getNumber()[1]);
+            temp = new RationalScalar(this.numerator * s.getDenominator() + s.getNumerator() * this.denominator, this.denominator * s.getDenominator());
         }
-        return temp;
+        return temp.reduce();
     }
 
     public Scalar mul(Scalar s) {
-        RationalScalar temp = new RationalScalar(s.getNumber()[0] * this.numerator, s.getNumber()[1] * this.denominator);
-        return temp;
+        RationalScalar temp = new RationalScalar(s.getNumerator() * this.numerator, s.getDenominator() * this.denominator);
+        return temp.reduce();
     }
 
     public Scalar neg() {
@@ -93,12 +95,21 @@ public class RationalScalar extends Scalar {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof Scalar) {
-            Scalar other = (Scalar) o;
-            if (numerator == other.getNumber()[0] && denominator == other.getNumber()[1]) {
+        if (o instanceof RationalScalar) {
+            RationalScalar other = (RationalScalar) o;
+            if (numerator == other.numerator && denominator == other.denominator) {
                 return true;
             }
             return false;
+        }
+        if (o instanceof IntegerScalar) {
+            IntegerScalar other = (IntegerScalar) o;
+            if(this.denominator == 1){
+                if(other.equals(new IntegerScalar(this.numerator))){
+                    return true;
+                }
+            }
+            else return false;
         }
         return false;
     }
