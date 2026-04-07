@@ -2,6 +2,8 @@ package PolyCalc;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Polynomial {
     private Collection<Monomial> monomials;
@@ -21,33 +23,39 @@ public class Polynomial {
             } else {
                 coeff = new IntegerScalar(Integer.parseInt(tokens[i]));
             }
-            p.getMonomials().add(new Monomial(i, coeff));
+            if (coeff.sign() != 0) {
+                p.getMonomials().add(new Monomial(i, coeff));
+            }
         }
         return p;
     }
 
     public Polynomial add(Polynomial p) {
         Polynomial result = new Polynomial();
+        Map<Integer, Monomial> termMap = new HashMap<>();
 
         for (Monomial m : this.monomials) {
-            result.monomials.add(m);
+            if (m.sign() != 0) {
+                termMap.put(m.getExponent(), m);
+            }
         }
 
         for (Monomial n : p.getMonomials()) {
-            boolean foundMatch = false;
-            for (Monomial resMonomial : result.monomials) {
-                if (resMonomial.getExponent() == n.getExponent()) {
-                    result.monomials.remove(resMonomial);
-                    Monomial newMonomial = resMonomial.add(n);
-                    result.monomials.add(newMonomial);
-                    foundMatch = true;
-                    break;
+            if (n.sign() == 0) continue;
+
+            if (termMap.containsKey(n.getExponent())) {
+                Monomial sum = termMap.get(n.getExponent()).add(n);
+                if (sum.sign() == 0) {
+                    termMap.remove(n.getExponent());
+                } else {
+                    termMap.put(n.getExponent(), sum);
                 }
-            }
-            if (foundMatch == false) {
-                result.monomials.add(n);
+            } else {
+                termMap.put(n.getExponent(), n);
             }
         }
+
+        result.getMonomials().addAll(termMap.values());
         return result;
     }
 
@@ -72,6 +80,14 @@ public class Polynomial {
         return total;
     }
 
+    private Polynomial negate() {
+        Polynomial result = new Polynomial();
+        for (Monomial m : this.monomials) {
+            result.getMonomials().add(new Monomial(m.getExponent(), m.getCoefficient().neg()));
+        }
+        return result;
+    }
+
     public Polynomial derivative(){
         Polynomial result = new Polynomial();
         for (Monomial m : this.monomials){
@@ -83,23 +99,9 @@ public class Polynomial {
     public boolean equals(Object o) {
         if (o instanceof Polynomial) {
             Polynomial other = (Polynomial) o;
-            if (this.monomials.size() != other.getMonomials().size()) {
-                return false;
-            }
-            for (Monomial m : this.monomials) {
-                boolean found = false;
 
-                for (Monomial n : other.getMonomials()) {
-                    if (m.equals(n)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found == false) {
-                    return false;
-                }
-            }
-            return true;
+            Polynomial difference = this.add(other.negate());
+            return difference.getMonomials().isEmpty();
         }
         return false;
     }
