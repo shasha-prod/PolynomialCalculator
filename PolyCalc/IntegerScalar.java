@@ -10,6 +10,7 @@ public class IntegerScalar extends Scalar {
     public int getNumerator() {
         return number;
     }
+
     public int getDenominator() {
         return 1;
     }
@@ -48,16 +49,9 @@ public class IntegerScalar extends Scalar {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof IntegerScalar) {
-            Scalar other = (IntegerScalar) o;
-            if (this.number == other.getNumerator()) {
-                return true;
-            }
-            return false;
-        }
-        if (o instanceof RationalScalar) {
-            RationalScalar other = (RationalScalar) o;
-            return other.equals(new RationalScalar(this.number,1));
+        if (o instanceof Scalar) {
+            RationalScalar other = new RationalScalar(((Scalar) o).getNumerator(), ((Scalar) o).getDenominator());
+            return other.equals(new RationalScalar(this.number, 1));
         }
         return false;
     }

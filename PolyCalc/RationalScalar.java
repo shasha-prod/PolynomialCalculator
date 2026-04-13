@@ -9,9 +9,11 @@ public class RationalScalar extends Scalar {
         this.denominator = denominator;
         reduce();
     }
+
     public int getNumerator() {
         return numerator;
     }
+
     public int getDenominator() {
         return denominator;
     }
@@ -71,7 +73,7 @@ public class RationalScalar extends Scalar {
     }
 
     public Scalar neg() {
-        return new RationalScalar(this.numerator * -1,this.denominator);
+        return new RationalScalar(this.numerator * -1, this.denominator);
     }
 
     public int sign() {
@@ -91,7 +93,7 @@ public class RationalScalar extends Scalar {
             newNumerator = newNumerator * numerator;
             newDenominator = newDenominator * denominator;
         }
-        return new RationalScalar(newNumerator,newDenominator).reduce();
+        return new RationalScalar(newNumerator, newDenominator).reduce();
     }
 
     public boolean equals(Object o) {
@@ -102,16 +104,12 @@ public class RationalScalar extends Scalar {
             }
             return false;
         }
-        if (o instanceof IntegerScalar) {
-            IntegerScalar other = (IntegerScalar) o;
-            if(this.denominator == 1){
-                if(other.equals(new IntegerScalar(this.numerator))){
-                    return true;
-                }
-            }
-            else return false;
+        if (o instanceof Scalar) {
+            RationalScalar other = new RationalScalar(((Scalar) o).getNumerator(), ((Scalar) o).getDenominator());
+            return other.equals(this);
         }
         return false;
+
     }
 
     public String toString() {
