@@ -24,7 +24,7 @@ class IntegerScalarTest {
         //adding 0
         assertEquals(new IntegerScalar(8), new IntegerScalar(8).add(new IntegerScalar(0)));
         //adding RationalNumber fraction to a wholeInteger number
-        assertEquals(new RationalScalar(152,17), new IntegerScalar(8).add(new RationalScalar(16,17)));
+        assertEquals(new RationalScalar(152, 17), new IntegerScalar(8).add(new RationalScalar(16, 17)));
 
     }
 
@@ -49,6 +49,7 @@ class IntegerScalarTest {
         //checking zeros sign
         assertEquals(0, new IntegerScalar(0).sign());
     }
+
     @Test
     void testNeg() {
         // testing the negative of 300 =>-300

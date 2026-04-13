@@ -57,7 +57,7 @@ public class IntegerScalar extends Scalar {
         }
         if (o instanceof RationalScalar) {
             RationalScalar other = (RationalScalar) o;
-            other.equals(new RationalScalar(this.number,1));
+            return other.equals(new RationalScalar(this.number,1));
         }
         return false;
     }

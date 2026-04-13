@@ -8,4 +8,4 @@ This project implements a polynomial calculation system using object-oriented de
 
 The UML diagram illustrates the relationships between these components and their concrete implementations.
 
-<img width="841" height="596" alt="Untitled Diagram drawio" src="https://github.com/user-attachments/assets/af679009-e5c6-426f-ad09-598286c336ba" />
+<img width="791" height="340" alt="PolynomialCalculator drawio" src="https://github.com/user-attachments/assets/3b63eec9-30b7-4708-9e93-119b0754a4bf" />

@@ -3,8 +3,10 @@ package PolyCalc;
 abstract class Scalar {
     //getting the numerator
     public abstract int getNumerator();
+
     //getting the denominator
     public abstract int getDenominator();
+
     //Returns the addition between two scalars
     abstract Scalar add(Scalar s);
 

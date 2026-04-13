@@ -148,5 +148,28 @@ class PolynomialTest {
         Polynomial p = new Polynomial();
         assertEquals("0", p.toString());
     }
+    public static void main(String[] args) {
+        System.out.println("Hello, welcome to the Polynomial Calculator! We will now calculate:");
+        Polynomial a = Polynomial.build("1 2 3");
+        System.out.print(a.toString());
+        System.out.print(" + ");
+        Polynomial b = Polynomial.build("1 0 3");
+        System.out.print(b.toString() + " = ");
+        System.out.println(a.add(b));
+        System.out.println("This happens because:");
+        Scalar c = new IntegerScalar(1);
+        Scalar d = new IntegerScalar(1);
+        System.out.print(c.toString() + " + " + d.toString() + " = ");
+        System.out.println(c.add(d));
+        Monomial e = new Monomial(1,new IntegerScalar(2));
+        Monomial f = new Monomial(1,new IntegerScalar(0));
+        System.out.print(e.toString() + " + " + f.toString() + " = ");
+        System.out.println(e.add(f));
+        Monomial g = new Monomial(2,new IntegerScalar(3));
+        Monomial h = new Monomial(2,new IntegerScalar(3));
+        System.out.print(g.toString() + " + " + h.toString() + " = ");
+        System.out.println(g.add(h));
+
+    }
 }
 
