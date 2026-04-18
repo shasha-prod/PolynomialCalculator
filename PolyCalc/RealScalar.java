@@ -83,3 +83,4 @@ public class RealScalar extends Scalar {
         return "" + this.number;
     }
 }
+
