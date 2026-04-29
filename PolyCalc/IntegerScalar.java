@@ -7,20 +7,17 @@ public class IntegerScalar extends Scalar {
         this.number = number;
     }
 
-    public int getNumerator() {
+    @Override
+    public double getDouble() {
         return number;
     }
 
-    public int getDenominator() {
-        return 1;
-    }
-
     public Scalar add(Scalar s) {
-        return new RationalScalar(this.number, 1).add(s);
+        return new RealScalar(this.number).add(s);
     }
 
     public Scalar mul(Scalar s) {
-        return new RationalScalar(this.number, 1).mul(s);
+        return new RealScalar(this.number).mul(s);
     }
 
     public Scalar neg() {
@@ -50,8 +47,8 @@ public class IntegerScalar extends Scalar {
 
     public boolean equals(Object o) {
         if (o instanceof Scalar) {
-            RationalScalar other = new RationalScalar(((Scalar) o).getNumerator(), ((Scalar) o).getDenominator());
-            return other.equals(new RationalScalar(this.number, 1));
+            RealScalar other = new RealScalar(((Scalar) o).getDouble());
+            return other.equals(new RealScalar(this.getDouble()));
         }
         return false;
     }

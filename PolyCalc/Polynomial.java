@@ -20,6 +20,8 @@ public class Polynomial {
             if (tokens[i].contains("/")) {
                 String[] parts = tokens[i].split("/");
                 coeff = new RationalScalar(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+            } else if (tokens[i].contains(".")) {
+                coeff = new RealScalar(Double.parseDouble(tokens[i]));
             } else {
                 coeff = new IntegerScalar(Integer.parseInt(tokens[i]));
             }

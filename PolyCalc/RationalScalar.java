@@ -10,14 +10,6 @@ public class RationalScalar extends Scalar {
         reduce();
     }
 
-    public int getNumerator() {
-        return numerator;
-    }
-
-    public int getDenominator() {
-        return denominator;
-    }
-
     public Scalar reduce() {
         checkZero();
         negOrganizer();
@@ -57,19 +49,18 @@ public class RationalScalar extends Scalar {
     }
 
 
+    @Override
+    public double getDouble() {
+        double rationalToDouble = (double) numerator / denominator;
+        return rationalToDouble;
+    }
+
     public Scalar add(Scalar s) {
-        RationalScalar temp;
-        if (this.denominator == s.getDenominator()) {
-            temp = new RationalScalar(this.numerator + s.getNumerator(), this.denominator);
-        } else {
-            temp = new RationalScalar(this.numerator * s.getDenominator() + s.getNumerator() * this.denominator, this.denominator * s.getDenominator());
-        }
-        return temp.reduce();
+        return new RealScalar(this.getDouble()).add(s);
     }
 
     public Scalar mul(Scalar s) {
-        RationalScalar temp = new RationalScalar(s.getNumerator() * this.numerator, s.getDenominator() * this.denominator);
-        return temp.reduce();
+        return new RealScalar(this.getDouble()).mul(s);
     }
 
     public Scalar neg() {
@@ -97,19 +88,11 @@ public class RationalScalar extends Scalar {
     }
 
     public boolean equals(Object o) {
-        if (o instanceof RationalScalar) {
-            RationalScalar other = (RationalScalar) o;
-            if (numerator == other.numerator && denominator == other.denominator) {
-                return true;
-            }
-            return false;
-        }
         if (o instanceof Scalar) {
-            RationalScalar other = new RationalScalar(((Scalar) o).getNumerator(), ((Scalar) o).getDenominator());
-            return other.equals(this);
+            RealScalar other = new RealScalar(((Scalar) o).getDouble());
+            return other.equals(new RealScalar(this.getDouble()));
         }
         return false;
-
     }
 
     public String toString() {

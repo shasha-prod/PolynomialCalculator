@@ -1,12 +1,14 @@
 package PolyCalc;
 
 abstract class Scalar {
-    //getting the numerator
-    public abstract int getNumerator();
+//    //getting the numerator
+//    public abstract int getNumerator();
+//
+//    //getting the denominator
+//    public abstract int getDenominator();
 
-    //getting the denominator
-    public abstract int getDenominator();
-
+    //changing numbers into doubles
+    public abstract double getDouble();
     //Returns the addition between two scalars
     abstract Scalar add(Scalar s);
 

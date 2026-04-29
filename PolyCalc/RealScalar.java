@@ -1,51 +1,29 @@
 package PolyCalc;
 
+
 public class RealScalar extends Scalar {
+    public static final double EPSILON = 1e-6;
     private double number;
 
     public RealScalar(double number) {
-        this.number = number;
+        this.number = round(number);
     }
-
+    private double round(double number) {
+        return Math.round(number * 1000000.0)/1000000.0 ;
+    }
     @Override
-    public int getNumerator() {
-        return getNumerator(this.number);
-    }
-
-    private int getNumerator(double doubleNumber) {
-        int temp = (int) doubleNumber;
-        if (doubleNumber == temp) {
-            return temp;
-        } else {
-            getNumerator(doubleNumber * 10);
-        }
-        return 0;
-    }
-
-    @Override
-    public int getDenominator() {
-        return getDenominator(this.number, 10);
-    }
-
-    private int getDenominator(double doubleNumber, int counter) {
-        int temp = (int) doubleNumber;
-        if (doubleNumber == temp) {
-            return counter;
-        } else {
-            counter = counter * 10;
-            getDenominator(doubleNumber * 10, counter);
-        }
-        return 0;
+    public double getDouble() {
+        return number;
     }
 
     @Override
     Scalar add(Scalar s) {
-        return new RationalScalar(this.getNumerator(), this.getDenominator()).add(s);
+        return new RealScalar(this.number + s.getDouble());
     }
 
     @Override
     Scalar mul(Scalar s) {
-        return new RationalScalar(this.getNumerator(), this.getDenominator()).mul(s);
+        return new RealScalar(this.number * s.getDouble());
     }
 
     @Override
@@ -55,7 +33,14 @@ public class RealScalar extends Scalar {
 
     @Override
     Scalar power(int exponent) {
-        return new RationalScalar(this.getNumerator(), this.getDenominator()).power(exponent);
+        if(exponent == 0){
+            return new RealScalar(1);
+        }
+        double temp = this.number;
+        for (int i = 1; i < exponent; i++) {
+            temp = temp * this.number;
+        }
+        return new RealScalar(temp);
     }
 
     @Override
@@ -71,9 +56,16 @@ public class RealScalar extends Scalar {
 
     @Override
     public boolean equals(Object o) {
+        if (o instanceof RealScalar) {
+            RealScalar other = (RealScalar) o;
+            if (this.number == other.number) {
+                return true;
+            }
+            return false;
+        }
         if (o instanceof Scalar) {
-            RationalScalar other = new RationalScalar(((Scalar) o).getNumerator(), ((Scalar) o).getDenominator());
-            return other.equals(new RationalScalar(this.getNumerator(), this.getDenominator()));
+            RealScalar other = new RealScalar(((Scalar) o).getDouble());
+            return other.equals(this);
         }
         return false;
     }
