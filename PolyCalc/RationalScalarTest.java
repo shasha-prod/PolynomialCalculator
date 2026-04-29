@@ -80,7 +80,6 @@ class RationalScalarTest {
         assertEquals(new RationalScalar(-1, 1), new RationalScalar(100, -100).power(15));
         //checking a RationalNumber to the power of 0
         assertEquals(new RationalScalar(1, 1), new RationalScalar(100, 99).power(0));
-
     }
 
     @Test
