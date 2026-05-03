@@ -1,78 +1,93 @@
 package PolyCalc;
 
-
 public class RealScalar extends Scalar {
-    public static final double EPSILON = 1e-6;
     private double number;
 
     public RealScalar(double number) {
         this.number = round(number);
     }
+
     private double round(double number) {
         return Math.round(number * 1000000.0)/1000000.0 ;
     }
+
     @Override
     public double getDouble() {
         return number;
     }
 
+    // double dispatch
+
     @Override
-    Scalar add(Scalar s) {
+    public Scalar add(Scalar s) {
+        return s.addReal(this);
+    }
+
+    @Override
+    public Scalar mul(Scalar s) {
+        return s.mulReal(this);
+    }
+
+    // combos
+
+    @Override
+    public Scalar addInteger(IntegerScalar s) {
+        return new RealScalar(this.number + s.getNumber());
+    }
+
+    @Override
+    public Scalar addRational(RationalScalar s) {
         return new RealScalar(this.number + s.getDouble());
     }
 
     @Override
-    Scalar mul(Scalar s) {
+    public Scalar addReal(RealScalar s) {
+        return new RealScalar(this.number + s.getDouble());
+    }
+
+    @Override
+    public Scalar mulInteger(IntegerScalar s) {
         return new RealScalar(this.number * s.getDouble());
     }
 
     @Override
-    Scalar neg() {
+    public Scalar mulRational(RationalScalar s) {
+        return new RealScalar(this.number * s.getDouble());
+    }
+
+    @Override
+    public Scalar mulReal(RealScalar s) {
+        return new RealScalar(this.number * s.getDouble());
+    }
+
+    @Override
+    public Scalar neg() {
         return new RealScalar(this.number * -1);
     }
 
     @Override
-    Scalar power(int exponent) {
-        if(exponent == 0){
-            return new RealScalar(1);
-        }
-        double temp = this.number;
-        for (int i = 1; i < exponent; i++) {
-            temp = temp * this.number;
-        }
-        return new RealScalar(temp);
+    public Scalar power(int exponent) {
+        return new RealScalar(Math.pow(this.number, exponent));
     }
 
     @Override
-    int sign() {
-        if (this.number < 0) {
-            return -1;
-        }
-        if (this.number > 0) {
-            return 1;
-        }
+    public int sign() {
+        if (this.number < 0) return -1;
+        if (this.number > 0) return 1;
         return 0;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof RealScalar) {
-            RealScalar other = (RealScalar) o;
-            if (this.number == other.number) {
-                return true;
-            }
-            return false;
-        }
         if (o instanceof Scalar) {
-            RealScalar other = new RealScalar(((Scalar) o).getDouble());
-            return other.equals(this);
+            double diff = Math.abs(this.number - ((Scalar) o).getDouble());
+            return diff < 0.000001;
         }
         return false;
     }
 
     @Override
     public String toString() {
-        return "" + this.number;
+        return String.valueOf(number);
     }
 }
-

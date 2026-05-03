@@ -30,4 +30,13 @@ abstract class Scalar {
     //override
     public abstract String toString();
 
+    // signatures for double dispatch
+    public abstract Scalar addInteger(IntegerScalar s);
+    public abstract Scalar addRational(RationalScalar s);
+    public abstract Scalar addReal(RealScalar s);
+
+    public abstract Scalar mulInteger(IntegerScalar s);
+    public abstract Scalar mulRational(RationalScalar s);
+    public abstract Scalar mulReal(RealScalar s);
+
 }

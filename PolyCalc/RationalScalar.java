@@ -10,13 +10,20 @@ public class RationalScalar extends Scalar {
         reduce();
     }
 
+    public int getNumerator() {
+        return numerator;
+    }
+
+    public int getDenominator() {
+        return denominator;
+    }
+
     public Scalar reduce() {
         checkZero();
         negOrganizer();
         simplify();
         if (denominator == 1) {
-            IntegerScalar fullNumber = new IntegerScalar(numerator);
-            return fullNumber;
+            return new IntegerScalar(numerator);
         }
         return this;
     }
@@ -48,31 +55,71 @@ public class RationalScalar extends Scalar {
         return this;
     }
 
-
     @Override
     public double getDouble() {
-        double rationalToDouble = (double) numerator / denominator;
-        return rationalToDouble;
+        return (double) numerator / denominator;
     }
 
+    // double dispatch
+
+    @Override
     public Scalar add(Scalar s) {
-        return new RealScalar(this.getDouble()).add(s);
+        return s.addRational(this);
     }
 
+    @Override
     public Scalar mul(Scalar s) {
-        return new RealScalar(this.getDouble()).mul(s);
+        return s.mulRational(this);
     }
 
+    // combos
+
+    @Override
+    public Scalar addInteger(IntegerScalar s) {
+        int newNumerator = this.numerator + (s.getNumber() * this.denominator);
+        return new RationalScalar(newNumerator, this.denominator).reduce();
+    }
+
+    @Override
+    public Scalar addRational(RationalScalar s) {
+        int newNumerator = (this.numerator * s.getDenominator()) + (s.getNumerator() * this.denominator);
+        int newDenominator = this.denominator * s.getDenominator();
+        return new RationalScalar(newNumerator, newDenominator).reduce();
+    }
+
+    @Override
+    public Scalar addReal(RealScalar s) {
+        return s.addRational(this);
+    }
+
+    @Override
+    public Scalar mulInteger(IntegerScalar s) {
+        return new RationalScalar(this.numerator * s.getNumber(), this.denominator).reduce();
+    }
+
+    @Override
+    public Scalar mulRational(RationalScalar s) {
+        return new RationalScalar(this.numerator * s.getNumerator(), this.denominator * s.getDenominator()).reduce();
+    }
+
+    @Override
+    public Scalar mulReal(RealScalar s) {
+        return s.mulRational(this);
+    }
+
+    @Override
     public Scalar neg() {
-        return new RationalScalar(this.numerator * -1, this.denominator);
+        return new RationalScalar(this.numerator * -1, this.denominator).reduce();
     }
 
+    @Override
     public int sign() {
         if (this.numerator > 0) return 1;
         else if (this.numerator < 0) return -1;
         else return 0;
     }
 
+    @Override
     public Scalar power(int exponent) {
         int newNumerator = this.numerator;
         int newDenominator = this.denominator;
@@ -87,6 +134,7 @@ public class RationalScalar extends Scalar {
         return new RationalScalar(newNumerator, newDenominator).reduce();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof Scalar) {
             RealScalar other = new RealScalar(((Scalar) o).getDouble());
@@ -95,6 +143,7 @@ public class RationalScalar extends Scalar {
         return false;
     }
 
+    @Override
     public String toString() {
         if (denominator == 1 || denominator == 0) {
             return "" + this.numerator;

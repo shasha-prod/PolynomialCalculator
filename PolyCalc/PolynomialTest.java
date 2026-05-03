@@ -5,6 +5,44 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PolynomialTest {
 
+        @Test
+        public void testBuild_RealCoefficients_PositiveExponents() {
+            // Test parsing a polynomial with positive real coefficients: 1.5 + 2.25x + 3.1x^2
+            Polynomial p = Polynomial.build("1.5 2.25 3.1");
+            Polynomial expected = new Polynomial();
+            expected.getMonomials().add(new Monomial(0, new RealScalar(1.5)));
+            expected.getMonomials().add(new Monomial(1, new RealScalar(2.25)));
+            expected.getMonomials().add(new Monomial(2, new RealScalar(3.1)));
+
+            assertTrue(p.equals(expected), "Failed to build polynomial with positive real coefficients.");
+        }
+
+        @Test
+        public void testBuild_RealCoefficients_WithNegatives() {
+            // Test parsing with negative real coefficients: -2.0x + 4.25x^3 (from assignment examples)
+            Polynomial p = Polynomial.build("0 -2.0 0 4.25");
+
+            Polynomial expected = new Polynomial();
+            expected.getMonomials().add(new Monomial(1, new RealScalar(-2.0)));
+            expected.getMonomials().add(new Monomial(3, new RealScalar(4.25)));
+
+            assertTrue(p.equals(expected), "Failed to build polynomial with negative real coefficients.");
+        }
+
+        @Test
+        public void testBuild_MixedScalarTypes() {
+            // Test parsing a mix of integers, rationals, and reals: 1 + 0.5x + 3x^2 (from assignment examples)
+            Polynomial p = Polynomial.build("1 0.5 3");
+
+            Polynomial expected = new Polynomial();
+
+            expected.getMonomials().add(new Monomial(0, new IntegerScalar(1)));
+            expected.getMonomials().add(new Monomial(1, new RealScalar(0.5)));
+            expected.getMonomials().add(new Monomial(2, new IntegerScalar(3)));
+
+            assertTrue(p.equals(expected), "Failed to build polynomial with mixed scalar types.");
+        }
+
     @Test
     void polynomial_build_allInteger() {
         // "1 2 3" -> 1 + 2x + 3x^2

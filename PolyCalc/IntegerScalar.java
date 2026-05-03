@@ -7,23 +7,65 @@ public class IntegerScalar extends Scalar {
         this.number = number;
     }
 
+    public int getNumber() {
+        return number;
+    }
+
     @Override
     public double getDouble() {
         return number;
     }
 
+    // double dispatch
+
+    @Override
     public Scalar add(Scalar s) {
-        return new RealScalar(this.number).add(s);
+        return s.addInteger(this);
     }
 
+    @Override
     public Scalar mul(Scalar s) {
-        return new RealScalar(this.number).mul(s);
+        return s.mulInteger(this);
     }
 
+    // combos
+
+    @Override
+    public Scalar addInteger(IntegerScalar s) {
+        return new IntegerScalar(this.number + s.getNumber());
+    }
+
+    @Override
+    public Scalar addRational(RationalScalar s) {
+        return s.addInteger(this);
+    }
+
+    @Override
+    public Scalar addReal(RealScalar s) {
+        return s.addInteger(this);
+    }
+
+    @Override
+    public Scalar mulInteger(IntegerScalar s) {
+        return new IntegerScalar(this.number * s.getNumber());
+    }
+
+    @Override
+    public Scalar mulRational(RationalScalar s) {
+        return s.mulInteger(this);
+    }
+
+    @Override
+    public Scalar mulReal(RealScalar s) {
+        return s.mulInteger(this);
+    }
+
+    @Override
     public Scalar neg() {
         return new IntegerScalar(this.number * -1);
     }
 
+    @Override
     public Scalar power(int exponent) {
         int newNumber = this.number;
         if (exponent == 0) {
@@ -35,6 +77,7 @@ public class IntegerScalar extends Scalar {
         return new IntegerScalar(newNumber);
     }
 
+    @Override
     public int sign() {
         if (this.number < 0) {
             return -1;
@@ -45,6 +88,7 @@ public class IntegerScalar extends Scalar {
         return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof Scalar) {
             RealScalar other = new RealScalar(((Scalar) o).getDouble());
@@ -53,6 +97,7 @@ public class IntegerScalar extends Scalar {
         return false;
     }
 
+    @Override
     public String toString() {
         return "" + number;
     }
